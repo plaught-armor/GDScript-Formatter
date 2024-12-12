@@ -125,8 +125,7 @@ func update_shortcut() -> void:
 
 	var shortcut: Shortcut = _get_shortcut()
 	if is_instance_valid(shortcut):
-		for event in shortcut.events:
-			event = event as InputEvent
+		for event: InputEvent in shortcut.events:
 			if is_instance_valid(event):
 				event.changed.connect(update_shortcut)
 				_connection_list.push_back(event)
@@ -231,7 +230,7 @@ func _add_format_tool_item_and_command() -> void:
 		)
 		return
 	add_tool_menu_item("GDScriptFormatter: Format script", format_script)
-	var shortcut = _get_shortcut()
+	var shortcut: Shortcut = _get_shortcut()
 	EditorInterface.get_command_palette().add_command(
 		"Format GDScript",
 		"GDScript Formatter/Format GDScript",
@@ -306,7 +305,7 @@ func _store_code_edit_info(
 	func_get_lines: Callable, func_get_line: Callable
 ) -> Dictionary[int, int]:
 	var ret: Dictionary[int, int] = {}
-	for line in func_get_lines.call():
+	for line: int in func_get_lines.call():
 		ret[line] = func_get_line.call(line)
 	return ret
 
@@ -318,7 +317,7 @@ func _restore_code_edit_info(
 	new_text_line_count: int
 ) -> void:
 	var prev_lines: PackedInt64Array = PackedInt64Array(prev_data.keys())
-	for idx in range(prev_lines.size()):
+	for idx: int in range(prev_lines.size()):
 		var prev_line: int = prev_lines[idx]
 		var prev_text: String = prev_data[prev_line]
 		if func_get_line.call(prev_line).similarity(prev_text) > 0.9:
@@ -357,7 +356,7 @@ func _format_code(script_path: String, code: String, formated: Array[String]) ->
 	]
 	if _preference.fast_but_unsafe:
 		args.push_back("--fast")
-	var err = OS.execute(_get_gdformat_command(), args, output)
+	var err: Error = OS.execute(_get_gdformat_command(), args, output)
 	if err == OK:
 		f = FileAccess.open(tmp_file, FileAccess.READ)
 		formated.push_back(f.get_as_text())
